@@ -25,11 +25,11 @@ The journey itself is stable. What changes over releases is what happens *within
 
 Every scenario in this library sits across three layers:
 
-**Layer 1 — The patron journey : ** The phases every contact passes through, from IVR to ACW. These are the columns in the explorer. They don't change much. What changes is the platform capability within each phase and the quality of handoff between phases.
+**Layer 1 — The patron journey** :  The phases every contact passes through, from IVR to ACW. These are the columns in the explorer. They don't change much. What changes is the platform capability within each phase and the quality of handoff between phases.
 
-**Layer 2 — Platform capabilities : ** The constraints that exist independent of any scenario — script concurrency limits, conference party caps, ACW timer mechanics, Config Manager reliability, the missing extension point on consult legs. These are the chips in the capability bar. Some are configuration choices. Some are architectural facts. Some are production bugs with unmerged fixes.
+**Layer 2 — Platform capabilities** :  The constraints that exist independent of any scenario — script concurrency limits, conference party caps, ACW timer mechanics, Config Manager reliability, the missing extension point on consult legs. These are the chips in the capability bar. Some are configuration choices. Some are architectural facts. Some are production bugs with unmerged fixes.
 
-**Layer 3 — Customer asks and gaps : ** Where Layer 1 meets Layer 2 and something breaks — discovered when customers hit a limit or a missing feature. These are the gap cards in the Gap Map. Each one has a Jira, a severity, a delivery target, and a list of affected customers.
+**Layer 3 — Customer asks and gaps** : Where Layer 1 meets Layer 2 and something breaks — discovered when customers hit a limit or a missing feature. These are the gap cards in the Gap Map. Each one has a Jira, a severity, a delivery target, and a list of affected customers.
 
 ---
 
