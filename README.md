@@ -6,6 +6,8 @@
 
 
 
+
+
 A living reference for how CXone Voice Channel works — built for onboarding, planning, and answering customer asks quickly.
 
 ---
