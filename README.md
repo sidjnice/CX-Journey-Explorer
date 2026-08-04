@@ -2,7 +2,8 @@
 
 A PM intelligence tool that maps enterprise contact center requirements to CXone Voice Channel capability — and surfaces what's missing before it becomes an escalation.
 
-> *(add screenshot here)*
+<img width="935" height="401" alt="vc_scenarios" src="https://github.com/user-attachments/assets/0375de06-9dc1-4786-b959-f58c1c50671d" />
+
 
 ---
 
