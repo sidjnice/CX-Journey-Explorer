@@ -1,104 +1,150 @@
 # CXone VC Scenario Explorer
 
-A PM intelligence tool that maps enterprise contact center requirements to CXone Voice Channel capability — and surfaces what's missing before it becomes an escalation.
+
 
 <img width="935" height="475" alt="vc_scenarios" src="https://github.com/user-attachments/assets/359d83cc-2ba1-4c7c-9cec-08f3161850e7" />
 
 
 
----
-
-## The problem this solves
-
-Customer escalations arrive without structure. A PS engineer files a ticket saying "conference hold music is broken for Carnival." Without context it takes hours to answer: Is this a known gap? Does it already have a Jira? What release is it targeting? Which other customers are affected? What are the open questions before we can commit?
-
-The harder problem is the gaps customers haven't asked about yet — the ones that will become escalations once a feature ships. A new consult script capability looks clean in a demo. But does it work on a conference leg? Does it survive a warm transfer? Does it create a new ACW gap downstream? Those questions should be answered before the feature ships, not after.
-
-This tool answers both.
+A living reference for how CXone Voice Channel works — built for onboarding, planning, and answering customer asks quickly.
 
 ---
 
-## Goal
+## What this is
 
-**Reduce the time from "customer escalation arrives" to "PM has a grounded answer" from hours to minutes.**
+Every contact center interaction follows the same fundamental journey: a patron calls, waits in queue, an agent answers, something happens mid-call (hold, consult, conference, transfer), the call ends, and the agent wraps up. That journey is the spine of this library.
 
-Specifically:
-- Is this a known gap, and what Jira tracks it?
-- What release is it targeting, and which customers are affected?
-- Does this customer's ask expose a gap they haven't hit yet?
-- What are the open questions before I can commit to delivery?
-
----
-
-## What's in this repo
-
-```
-vc-scenarios/
-  README.md                                         ← this file
-  vc-scenario-archetypes.md                         ← 11 canonical interaction patterns (foundation doc)
-  scenario-library/
-    cxone-scenario-explorer.html                    ← the tool (open in browser)
-    SCENARIO-LIBRARY-UPDATE-GUIDE.md                ← how to refresh gaps and capabilities
-    layer2/
-      capabilities.md                               ← CAP-01–CAP-11: all platform limits
-    SCN-013-ivr-press-path-data-streams.md
-    SCN-014-consult-system-script-customization.md
-```
-
-The HTML file is the primary interface. The markdown files are the source it's built from.
-
----
-
-## How to open the explorer without downloading the repo
-
-GitHub Enterprise does not render HTML files inline. Two options:
-
-**Option 1 — htmlpreview (no install, browser only)**
-
-Navigate to the file in GitHub, copy the URL, then paste it into:
-
-```
-https://htmlpreview.github.io/?https://github.com/inContact/vc-scenarios/blob/main/scenario-library/cxone-scenario-explorer.html
-```
-
-Bookmark that URL — it always renders the latest version from `main`.
-
-> Note: htmlpreview requires the repo to be accessible in your browser session. If it doesn't work on your network, use Option 2.
-
-**Option 2 — download the single file**
-
-1. Navigate to `scenario-library/cxone-scenario-explorer.html` in GitHub
-2. Click **Raw** (top right)
-3. Right-click → **Save As** → save as `.html`
-4. Open in any browser
-
-One file, no dependencies, no repo clone needed.
-
----
-
-## How the explorer works
-
-The explorer has three modes selectable from the top bar:
-
-**Journey** — the patron/agent interaction as a phase strip. Each phase shows the platform events, states, capability constraints, and open gaps for that part of the journey. Click any phase to see the detail.
-
-**Gap Map** — all tracked platform gaps with Jira status, severity, delivery target, and affected customers. The definitive list of what's broken and when it ships.
-
-**PM Lens** — stress-test analyses for specific customer scenarios. Each lens asks: what does the state machine actually support here? What are the hidden gaps? What can't be committed?
-
-**Archetype filter** — select any of the 11 canonical interaction archetypes (S1–S11) to filter the Gap Map and highlight the Journey phases relevant to that interaction type. S5 Mid-Call shows the highest gap density. S4 Queue Health and S7 Callback have zero tracked gaps — which means they haven't been tested yet.
+The journey itself is stable. What changes over releases is what happens *within* each step, and how well the steps connect to each other. A new routing strategy adds capability at the queue step. A consult script feature adds capability at the mid-call step. A metadata gap means the transfer step loses context when it hands off to the next step. This library tracks all of that — what's supported today, what's being built, and what's still broken.
 
 ---
 
 ## The three layers
 
-The tool is built on three layers of knowledge:
+Every scenario in this library sits across three layers:
 
-**Layer 1 — Interaction archetypes.** 11 canonical interaction patterns derived from the building blocks of the CXone VC platform: contact origination, channel, skill assignment model, queue state, routing strategy, script layer, execution phase, mid-call action, and infrastructure state. These are defined in `vc-scenario-archetypes.md`. They are the foundation for Rovo's coverage assessment.
+**Layer 1 — The patron journey. ** The phases every contact passes through, from IVR to ACW. These are the columns in the explorer. They don't change much. What changes is the platform capability within each phase and the quality of handoff between phases.
 
-**Layer 2 — Capability constraints.** Platform limits that exist independent of any scenario — script concurrency ceilings, conference party limits, ACW timer mechanics, Config Manager reliability, consult leg script context. These are documented in `layer2/capabilities.md` (CAP-01 through CAP-11). Some are PM-configurable. Some are architectural. CAP-11 is a production reliability bug with an unmerged fix.
+**Layer 2 — Platform capabilities. ** The constraints that exist independent of any scenario — script concurrency limits, conference party caps, ACW timer mechanics, Config Manager reliability, the missing extension point on consult legs. These are the chips in the capability bar. Some are configuration choices. Some are architectural facts. Some are production bugs with unmerged fixes.
 
-**Layer 3 — Gaps.** Where Layer 1 breaks because Layer 2 has a limit — discovered when customers hit them. 13 gaps currently tracked, mapped to Jira, phases, customers, and delivery targets.
+**Layer 3 — Customer asks and gaps. ** Where Layer 1 meets Layer 2 and something breaks — discovered when customers hit a limit or a missing feature. These are the gap cards in the Gap Map. Each one has a Jira, a severity, a delivery target, and a list of affected customers.
+
+---
+
+## The 11 archetypes
+
+Rather than enumerate all possible interactions, the library organizes scenarios into 11 canonical archetypes — interaction patterns that each represent a family of related scenarios. The archetype bar at the top of the explorer lets you filter the entire tool by archetype.
+
+| Archetype | What it covers |
+|---|---|
+| **S1 Basic Inbound** | The atomic unit. Patron calls → IVR → queue → agent answers → ACW. Baseline for everything else. |
+| **S2 Overflow / Bullseye** | Queue depth exceeds threshold → Bullseye expands proficiency range → contacts route to broader agent pool. |
+| **S3 RRR Mid-Queue** | RRR rule evaluates queue statistics mid-wait → contact proficiency updated → different agents become eligible. |
+| **S4 Queue Health** | Primary skill KPIs degrade → Queue Health reserves capacity by deactivating Secondary skills on protected agents. |
+| **S5 Mid-Call** | Agent takes a mid-call action: hold, consult, conference, blind or warm transfer. Highest gap density of any archetype. |
+| **S6 Personal Queue** | Agent already on a contact receives a second contact via Personal Queue. Max 3 concurrent per agent. |
+| **S7 Callback** | Patron opts out of hold wait → system calls back when agent is available. Re-enters routing as outbound-flavored inbound. |
+| **S8 Outbound** | Enterprise-initiated contact. Agent previews record, system dials, OnPreview event fires instead of OnAnswer. |
+| **S9 Extension Boundary** | Custom script attempts a capability in a context the system script doesn't expose an extension point for. Consult leg is the canonical example. |
+| **S10 Infra Degraded** | Any of S1–S9 during Config Manager slowness. Feature toggle checks block scripting threads → cluster unresponsive. 5 of 6 root causes open in production. |
+| **S11 Post-Call** | Contact ends → ACW timer → optional post-call survey → agent released. Two distinct sub-phases with different gap profiles. |
+
+The archetype foundations — building block axes, constraint rules (platform physics), and coverage assessment — are documented in `vc-scenario-archetypes.md`.
+
+---
+
+## The 9 journey phases
+
+The phase strip across the top of the explorer represents the patron journey. Each phase is a distinct execution context with its own events, platform states, capability constraints, and gaps.
+
+| Phase | Name | What happens |
+|---|---|---|
+| **p1** | Patron dials | SIP invite received, contact created, script started |
+| **p2** | IVR + Queue | IVR script executes, DTMF captured, REQAGENT fires, patron waits |
+| **p3** | Agent accepts | Agent offered contact, accepts, OnAnswer fires, conversation begins |
+| **p4** | Active call | Live two-party call, script continues, mid-call actions available |
+| **p5** | Conf / MCH | Multi-party state: hold, consult, conference, MCH manages legs |
+| **p6** | Patron drops | Patron hangs up mid-conference, VC must detect and handle state change |
+| **p7** | Transfer | Blind or warm transfer, new ContactID created, metadata handoff |
+| **p8** | Call ends + Survey | Contact terminates, post-call script runs, survey offered |
+| **p9** | ACW | After-call wrap, timer runs, disposition, agent released |
+
+**Phase colour coding** in the strip: green = supported, amber = enhancement in progress, red = known gap. The badge number on each phase is the count of open gaps touching that phase.
+
+---
+
+## How to read the explorer
+
+### The layout
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  HEADER    Mode switcher (Journey / Gap Map / PM Lens)  Legend      │ ← dark nav bar
+├─────────────────────────────────────────────────────────────────────┤
+│  ARCHETYPE BAR    S1 · S2 · S3 · S4 · S5 ... S11    Filter meta    │ ← select to filter
+├─────────────────────────────────────────────────────────────────────┤
+│  PHASE STRIP    p1 → p2 → p3 → p4 → p5 → p6 → p7 → p8 → p9        │ ← click any phase
+├─────────────────────────────────────────────────────────────────────┤
+│  CAPABILITY BAR    C01  C02  C03 ...                                 │ ← constraints for selected phase
+├──────────────────────────┬──────────────────────────────────────────┤
+│  SIDEBAR                 │  RIGHT PANEL                             │
+│  Info / Gaps / PM Qs     │  Markmap diagram for selected phase      │
+│  tabs for selected phase │  (zooms, pans, expands)                  │
+└──────────────────────────┴──────────────────────────────────────────┘
+```
+
+### Reading a phase
+
+1. Click any phase in the strip. The sidebar fills with three tabs: **Info** (products, events, states, APIs active in this phase), **Gaps** (open Jiras touching this phase), and **PM Qs** (open questions that need engineering input before committing).
+
+2. The **capability bar** updates to show only the platform constraints relevant to that phase. Each chip is colour-coded: green = works fine, amber = partial / workaround exists, red = blocked / no fix in current release.
+
+3. The **right panel** renders a markmap diagram of the phase — a visual breakdown of the products, events, API actions, and Layer 2 constraints in play. It zooms and pans. The diagram is the answer to "what exactly is happening inside this step?"
+
+### Using the archetype filter
+
+Selecting an archetype from the bar does three things simultaneously: phases outside the archetype dim in the strip, the Gap Map filters to only gaps belonging to that archetype, and the right panel shows the archetype's coverage assessment — including which gaps are tracked and which archetypes have zero Jira coverage (a signal, not reassurance).
+
+### Three modes
+
+**Journey** — start here. Phase strip + sidebar + diagram. Best for understanding what the platform does today and where it falls short within a given phase.
+
+**Gap Map** — all 13 tracked gaps across all phases, each with Jira status, severity, delivery target, and affected customers. Use this when you need to answer "is this already filed and when does it ship?"
+
+**PM Lens** — stress-test analyses for specific customer scenarios. Currently populated for: ORC-53014 consult script, Carnival conference vs multi-call, and GM conference survival after patron drops. Each lens asks the questions a PM should ask before committing to a customer.
+
+---
+
+## Who this is for
+
+**New joiners** — the journey strip and the archetype framework give you the mental model of how CXone VC works before you need to read any code or Confluence pages. Start with S1 Basic Inbound, step through each phase, then compare S5 Mid-Call to understand where most of the open work sits.
+
+**PMs and product leads** — when a new customer ask arrives, open the Gap Map, find the relevant phase, check whether there's already a Jira. If there isn't, use the PM Lens as a template for stress-testing the ask before grooming. The archetype filter shows you which interaction patterns have zero gap coverage — those are the unknown-unknowns.
+
+**Claude** — this repo is the knowledge base for answering VC product questions. The scenario archetypes document bounds the full scenario space. The Gap Map links every known gap to a Jira. The capability bar documents platform physics that don't change. When a new customer ask arrives, the first question is which archetype it belongs to and whether its phases have open gaps.
+
+---
+
+## How to view without downloading the repo
+
+GitHub Enterprise does not render HTML inline. Two options:
+
+**Option 1 — htmlpreview (no install needed)**
+
+```
+https://htmlpreview.github.io/?https://github.com/inContact/vc-scenarios/blob/main/scenario-library/cxone-scenario-explorer.html
+```
+
+Bookmark this URL — it always serves the latest version from `main`. Requires your GitHub session to be authenticated.
+
+**Option 2 — download the single file**
+
+Navigate to `scenario-library/cxone-scenario-explorer.html` in GitHub → click **Raw** → right-click → **Save As** → open in any browser. One file, no dependencies, works offline.
+
+---
+
+## What this repo is not
+
+This is not an engineering QA repo. Bug classification, test sets, and unknown-unknown extrapolation live in [`vc-capability-qa`](https://github.com/inContact/vccapabilityqaclaude). That repo and this one share the same source of truth but serve different audiences. A CAT 3 bug classification in vc-capability-qa maps to archetype S5 or S6 here. A gap in this repo with no CAT classification is a signal to run Flow 2 in vc-capability-qa.
 
 ---
 
