@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CXone VC — Scenario Library</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0c10;--s1:#111318;--s2:#181c24;--s3:#1e2330;
+  --bd:#1e2330;--bd2:#2d3448;
+  --t:#cdd6f4;--tm:#6c7086;--ts:#45475a;
+  --teal:#4fd6be;--teal-bg:#071f1c;--teal-bd:#0f3530;
+  --amber:#f9c74f;--amber-bg:#1e1600;--amber-bd:#3d2c00;
+  --red:#f38ba8;--red-bg:#1a0810;--red-bd:#40111e;
+  --blue:#89b4fa;--pur:#cba6f7;--grn:#a6e3a1;
+  --r:6px;
+}
+html,body{height:100%;background:var(--bg);color:var(--t);
+  font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;
+  display:flex;flex-direction:column;overflow:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+
+/* HEADER */
+header{flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--bd);
+  padding:7px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wm{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
+.wm span{color:var(--tm);font-weight:400}
+.modes{display:flex;gap:2px;background:var(--bg);border:1px solid var(--bd);border-radius:7px;padding:2px}
+.mode{padding:4px 10px;border-radius:5px;font-size:9px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;color:var(--tm);transition:all .12s;border:none;background:transparent}
+.mode:hover{color:var(--t)}
+.mode.active{background:var(--s3);color:var(--t)}
+.hleg-row{margin-left:auto;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.hleg{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--tm);text-transform:uppercase;letter-spacing:.05em}
+.hleg-dot{width:6px;height:6px;border-radius:50%}
+
+
+/* ARCHETYPE BAR */
+.arch-bar{flex-shrink:0;background:var(--s1);border-bottom:2px solid var(--bd2);
+  padding:5px 16px;display:flex;align-items:center;gap:8px;overflow-x:auto;flex-wrap:nowrap}
+.arch-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ts);
+  white-space:nowrap;flex-shrink:0;margin-right:2px}
+.arch-chips{display:flex;gap:4px;flex-wrap:nowrap;min-width:max-content}
+.arch-chip{padding:3px 9px;border-radius:10px;font-size:9px;font-weight:600;
+  cursor:pointer;transition:all .12s;border:1px solid var(--bd2);
+  color:var(--tm);background:var(--bg);white-space:nowrap;letter-spacing:.03em}
+.arch-chip:hover{color:var(--t);filter:brightness(1.2)}
+.arch-chip.active{background:#151a2e;border-color:#4060c0;color:#89b4fa}
+.arch-chip.all-chip.active{background:#0d2416;border-color:#2d6644;color:#a6e3a1}
+.arch-meta{font-size:9px;color:var(--ts);margin-left:auto;flex-shrink:0;white-space:nowrap;padding-left:12px;border-left:1px solid var(--bd)}
+.pn.arch-dim{opacity:0.32;filter:grayscale(0.5)}
+.pn.arch-lit{outline:2px solid #4060c0;outline-offset:2px}
+
+/* PHASE STRIP */
+.phase-strip{flex-shrink:0;background:var(--s2);border-bottom:1px solid var(--bd2);
+  padding:8px 16px 10px;overflow-x:auto;overflow-y:visible}
+.strip-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ts);margin-bottom:6px}
+.phases{display:flex;align-items:stretch;min-width:max-content;gap:0}
+.pn{min-width:96px;max-width:112px;flex-shrink:0;padding:5px 7px;
+  border-radius:var(--r);border:1px solid var(--bd);cursor:pointer;
+  transition:all .14s;position:relative;user-select:none}
+.pn:hover{filter:brightness(1.15)}
+.pn.active{outline:2px solid var(--blue);outline-offset:1px}
+.ph-nm{font-size:10px;font-weight:600;line-height:1.2;margin-bottom:1px}
+.ph-sb{font-size:8px;opacity:.6;line-height:1.3}
+.gbadge{position:absolute;top:-5px;right:-5px;background:var(--red);
+  color:#0a0005;font-size:8px;font-weight:800;border-radius:8px;
+  padding:1px 4px;line-height:1.5;border:1px solid var(--bg)}
+.psep{display:flex;align-items:center;padding:0 3px;color:var(--ts);font-size:10px;flex-shrink:0}
+.ph-sup{background:#071c14;border-color:#0d3326}
+.ph-enh{background:var(--amber-bg);border-color:var(--amber-bd)}
+.ph-gap{background:var(--red-bg);border-color:var(--red-bd)}
+
+/* CAPABILITY BAR */
+.cap-bar{flex-shrink:0;background:#0d1020;border-bottom:2px solid var(--bd2);
+  padding:5px 16px;overflow-x:auto;min-height:30px;display:flex;align-items:center;gap:0}
+.cap-bar-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ts);white-space:nowrap;margin-right:10px;flex-shrink:0}
+.caps{display:flex;gap:6px;flex-wrap:nowrap;min-width:max-content}
+.cap-chip{display:flex;align-items:center;gap:4px;padding:2px 7px;border-radius:10px;
+  border:1px solid;font-size:9px;cursor:pointer;transition:all .12s;white-space:nowrap}
+.cap-chip:hover{filter:brightness(1.2)}
+.cap-ok{background:#0a1e14;border-color:#143322;color:#4fd6be}
+.cap-warn{background:#1a1200;border-color:#332400;color:#f9c74f}
+.cap-block{background:#1a0810;border-color:#331020;color:#f38ba8}
+.cap-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.no-caps{font-size:9px;color:var(--ts);font-style:italic}
+
+/* BODY */
+.body{flex:1;display:flex;overflow:hidden;min-height:0}
+
+/* SIDEBAR */
+.sidebar{width:280px;min-width:220px;flex-shrink:0;background:var(--s1);
+  border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.sb-tabs{display:flex;border-bottom:1px solid var(--bd);flex-shrink:0}
+.sb-tab{flex:1;padding:6px 0;font-size:9px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--tm);cursor:pointer;border:none;background:transparent;
+  border-bottom:2px solid transparent;transition:all .12s}
+.sb-tab:hover{color:var(--t)}
+.sb-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.sb-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 11px;display:flex;flex-direction:column;gap:6px}
+.si-title{font-size:12px;font-weight:700;color:var(--blue);line-height:1.3}
+.si-sub{font-size:10px;color:var(--tm);margin-top:1px;line-height:1.4}
+.sh{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--ts);
+  border-bottom:1px solid var(--bd);padding-bottom:3px;margin-top:2px}
+.tag{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;
+  margin:1px 2px 1px 0;border:1px solid;line-height:1.5}
+.t-prod{background:#091526;border-color:#152b4a;color:#89b4fa}
+.t-evt{background:#1a0812;border-color:#360f24;color:#f38ba8}
+.t-state{background:#1a0e06;border-color:#35200c;color:#fab387}
+.t-api{background:#110c1e;border-color:#241840;color:#cba6f7}
+.t-open{background:#161000;border-color:#3d2c00;color:#f9c74f}
+.ir{display:flex;flex-direction:column;gap:2px;padding:3px 0;border-bottom:1px solid var(--bd)}
+.ir:last-child{border-bottom:none}
+.ir-k{font-size:9px;color:var(--ts);text-transform:uppercase;letter-spacing:.06em}
+.ir-v{font-size:10px;line-height:1.5;color:var(--t)}
+.gcard{border-radius:var(--r);padding:7px 9px;cursor:pointer;transition:all .12s;margin-bottom:2px}
+.gcard-red{background:var(--red-bg);border:1px solid var(--red-bd)}
+.gcard-red:hover,.gcard-red.active{border-color:var(--red)}
+.gcard-amb{background:var(--amber-bg);border:1px solid var(--amber-bd)}
+.gcard-amb:hover,.gcard-amb.active{border-color:var(--amber)}
+.gc-jira{font-size:8px;font-weight:700;margin-bottom:2px}
+.gc-r{color:var(--red)}.gc-a{color:var(--amber)}
+.gc-title{font-size:10px;line-height:1.35;margin-bottom:4px}
+.gc-meta{display:flex;gap:4px;flex-wrap:wrap}
+.pill{font-size:8px;padding:1px 6px;border-radius:8px;font-weight:600}
+.pl-r{background:#30101a;color:var(--red)}
+.pl-a{background:#2a1c00;color:var(--amber)}
+.pl-g{background:#0d2416;color:#a6e3a1}
+.pl-b{background:#0d1a35;color:#89b4fa}
+.pl-p{background:#1a1030;color:#cba6f7}
+
+/* PM LENS */
+.lcard{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:8px 10px;margin-bottom:5px}
+.lhdr{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.lion{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;flex-shrink:0;font-weight:700}
+.li-ok{background:#0d2416;color:#a6e3a1;border:1px solid #1a3320}
+.li-w{background:#2a1c00;color:#f9c74f;border:1px solid #3d2c00}
+.li-b{background:#2a0812;color:#f38ba8;border:1px solid #40111e}
+.li-u{background:#111220;color:#6c7086;border:1px solid #1e2330}
+.ln{font-size:10px;font-weight:600;color:var(--t)}
+.ls{margin-left:auto;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.lbody{font-size:10px;line-height:1.55;color:var(--tm)}
+.lf{padding:4px 8px;border-radius:0 3px 3px 0;margin-top:5px;font-size:9px;line-height:1.5;border-left:2px solid}
+.lf-w{background:var(--s3);border-color:var(--amber);color:var(--amber)}
+.lf-b{background:var(--s3);border-color:var(--red);color:var(--red)}
+.lf-o{background:var(--s3);border-color:var(--teal);color:var(--teal)}
+
+/* RIGHT PANEL */
+.rpanel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.rphdr{flex-shrink:0;padding:6px 12px;background:var(--s1);border-bottom:1px solid var(--bd);
+  font-size:9px;color:var(--ts);letter-spacing:.07em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.rpbadge{font-size:8px;padding:2px 7px;border-radius:8px;font-weight:600}
+.mmwrap{flex:1;overflow:auto}
+.markmap{width:100%;height:100%}
+.markmap>svg{width:100%;height:100%}
+.pmscroll{height:100%;overflow-y:auto;overflow-x:hidden;padding:10px 12px}
+
+footer{flex-shrink:0;background:var(--s1);border-top:1px solid var(--bd);
+  padding:4px 16px;display:flex;align-items:center;gap:10px;
+  font-size:9px;color:var(--ts);letter-spacing:.05em;flex-wrap:wrap}
+.fdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ph{color:var(--ts);font-size:11px;margin-top:20px;text-align:center;line-height:2;padding:0 8px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wm">CXone VC <span>/ Scenario Library</span></div>
+  <div class="modes" id="modes">
+    <button class="mode active" data-mode="journey">Journey</button>
+    <button class="mode" data-mode="gaps">Gap Map</button>
+    <button class="mode" data-mode="pm">PM Lens</button>
+  </div>
+  <div style="font-size:9px;color:var(--ts);border-left:1px solid var(--bd);padding-left:10px">
+    Layer 1: Scenarios &nbsp;·&nbsp; Layer 2: Capabilities &nbsp;·&nbsp; Layer 3: Customer Asks
+  </div>
+  <div class="hleg-row">
+    <div class="hleg"><div class="hleg-dot" style="background:#4fd6be"></div>Supported</div>
+    <div class="hleg"><div class="hleg-dot" style="background:#f9c74f"></div>Enhancement</div>
+    <div class="hleg"><div class="hleg-dot" style="background:#f38ba8"></div>Gap</div>
+    <div class="hleg"><div class="hleg-dot" style="background:#89b4fa"></div>Jira linked</div>
+  </div>
+</header>
+
+
+<div class="arch-bar" id="arch-bar">
+  <div class="arch-label">Archetype</div>
+  <div class="arch-chips" id="arch-chips"></div>
+  <div class="arch-meta" id="arch-meta">Select an archetype to filter gaps &amp; highlight phases</div>
+</div>
+
+<div class="phase-strip">
+  <div class="strip-label" id="strip-label">Layer 1 — Patron journey · click any phase</div>
+  <div class="phases" id="phases"></div>
+</div>
+
+<div class="cap-bar" id="cap-bar">
+  <div class="cap-bar-label">Layer 2 — Capabilities</div>
+  <div class="caps" id="caps-inner">
+    <span class="no-caps">Select a phase to see applicable platform limits</span>
+  </div>
+</div>
+
+<div class="body">
+  <div class="sidebar">
+    <div class="sb-tabs" id="sb-tabs">
+      <button class="sb-tab active" data-tab="info">Info</button>
+      <button class="sb-tab" data-tab="gaps-list">Gaps</button>
+      <button class="sb-tab" data-tab="pm-q">PM Qs</button>
+    </div>
+    <div class="sb-body" id="sb-body">
+      <div class="ph">Select a phase above</div>
+    </div>
+  </div>
+  <div class="rpanel">
+    <div class="rphdr">
+      <span id="rptitle">Scenario detail — events · states · APIs · limits</span>
+      <span class="rpbadge pl-b" id="rpbadge" style="display:none"></span>
+    </div>
+    <div class="mmwrap" id="mmwrap">
+      <div class="markmap" id="mm-root">
+        <script type="text/template">
+# CXone VC — Scenario Library
+
+## How to use
+- Click any phase tile in the strip above
+- **Journey** — how the system works today (events, states, APIs)
+- **Gap Map** — open issues per phase (badges = count)
+- **PM Lens** — stress-test a scenario for hidden gaps
+
+## Three layers
+- Layer 1: Scenarios (patron journey phases)
+- Layer 2: Platform capabilities and limits (constraint bar)
+- Layer 3: Customer asks and gaps (Gap Map mode)
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="display:flex;align-items:center;gap:4px"><div class="fdot" style="background:#4fd6be"></div>7 supported</div>
+  <div style="display:flex;align-items:center;gap:4px"><div class="fdot" style="background:#f9c74f"></div>4 enhancements</div>
+  <div style="display:flex;align-items:center;gap:4px"><div class="fdot" style="background:#f38ba8"></div>13 gaps</div>
+  <div style="display:flex;align-items:center;gap:4px"><div class="fdot" style="background:#89b4fa"></div>10 capability limits</div>
+  <span style="margin-left:auto">ORC-43660 · ORC-22932 · ORC-53055 · ORC-53014 · ORC-34959 · AW-57850</span>
+</footer>
+
+<script>
+// ═══════════════ LAYER 2 — CAPABILITIES ═══════════════
+const CAPS = {
+  C01:{id:'C01',name:'MaxSpawnScriptLimit',short:'Scripts: 15k/BU default',status:'warn',detail:'Default 15,000 scripts/BU. Configurable — Walmart/Schwab at 60k. LIMIT NOT ENFORCED via API/UI spawn paths (ORC-22932 bug). Only via VC internal path.',jira:'ORC-22932 · ORC-36819',pmq:'Does this customer use SPAWN in scripts? What is their peak concurrent count? Are they above 15k today?'},
+  C02:{id:'C02',name:'Conference Parties',short:'Conf: max 8 parties',status:'ok',detail:'Up to 8 parties per conference. Controlled by CanMultiPartyConference + EnabledForMCH in AgentSessionStart. Real limit today is conf collapse on patron drop, not the party count.',jira:'AW-57850 UC-C1',pmq:'How many parties does this customer need? Are they hitting the 8-party ceiling or the collapse-on-patron-drop issue?'},
+  C03:{id:'C03',name:'Multi-Call Concurrency',short:'MCH: max 3 concurrent',status:'warn',detail:'ORC-43660: up to 3 concurrent contacts per agent (hard cap). Media type 51. REQAGENT requires explicit target agent. Blind transfer to MultiCall skill: BLOCKED. NOT the same as conference.',jira:'ORC-43660',pmq:'CRITICAL: Multi-call ≠ Conference. Trying to conference within a multi-call leg splits the conference (ORC-43660 edge case). Ask: what exactly does the customer want — concurrent separate contacts, or all parties in one call?'},
+  C04:{id:'C04',name:'ACW Timer',short:'ACW: no extension today',status:'block',detail:'ACWTimeoutSeconds per skill. 0 = manual only. No native extension mechanism. ORC-51895: SA committed showstopper (needs up to 120 min extension).',jira:'ORC-51895',pmq:'Does this customer need agents to extend ACW? What is the max extension time they need?'},
+  C05:{id:'C05',name:'Transfer Metadata',short:'Transfer: ANI stripped',status:'block',detail:'All warm/consult transfers create a new ContactID, stripping ANI, Studio vars, CRM data, AI context. Blind transfer preserves ANI. MasterID shifts per leg, chain not surfaced in data lake.',jira:'AW-57850 UC-T1/T2',pmq:'Does this customer use CRM screen pops on transferred calls? Do they use voice biometrics? If yes, they are hitting this gap today.'},
+  C06:{id:'C06',name:'Survey / Post-Call',short:'Survey: Indicate workaround',status:'warn',detail:'No native post-call survey routing. Agent hangup drops patron immediately (ORC-48255). Workaround: Indicate button (agents can skip). No survey on consult/conference legs (ORC-53014).',jira:'ORC-48255 · ORC-53014',pmq:'How does this customer trigger post-call surveys? Are they using the Indicate workaround? What percentage of calls actually get surveyed?'},
+  C07:{id:'C07',name:'Salesforce Voice',short:'SF Voice: SDK gaps',status:'block',detail:'SF Voice uses Agent SDK CTI event subscription. Agent Assist/Copilot non-functional on consult/conference (ORC-34797 known bug). New events need SDK contract update separately.',jira:'AW-57850 · ORC-34797',pmq:'Does this customer operate in Salesforce Voice? If yes, validate every new capability in SF Voice separately — SDK contract is separate from Agent Workspace.'},
+  C08:{id:'C08',name:'Spawn Path Enforcement',short:'Spawn: UI/API bypass',status:'block',detail:'IC_SpawnScript and insideWS_SpawnScript stored procs bypass MaxSpawnScriptLimit. Web admin Spawn button and REST API also bypass it. Fix: gRPC gate. Status: unresolved (ORC-22932).',jira:'ORC-22932',pmq:'Does this customer use web admin or API tools to spawn scripts? If yes, they may be exceeding their limit silently.'},
+  C09:{id:'C09',name:'IVR LOG Stream',short:'IVR log: fields missing',status:'warn',detail:'IVR press path (DTMF) written to Kinesis IVR LOG stream. Missing fields: ACTION_LABEL (confirmed), InteractionID GUID. Data lake joins broken — stream uses bus_no+contactid, data lake uses regional GUIDs. ORC-34959.',jira:'ORC-34959 · ORC-53330 spike',pmq:'Does this customer use IVR press path for analytics? Which downstream system consumes it? Are they on bus_no+contactid joins or the GUID model?'},
+  C10:{id:'C10',name:'Consult Script Context',short:'Consult: no script context',status:'block',detail:'No custom Studio script runs on consult leg. Blocks: Indicate, surveys, transcription, AutoSummary, Agent Assist — ALL for consult/conference. ORC-53014. Voice scope confirmed; digital scope UNKNOWN. No OnConference() action exists.',jira:'ORC-53014 · ORC-51894',pmq:'(1) Voice only or digital? Unresolved — doubles scope if digital included. (2) BU-wide script or per-skill? (3) When does BEGIN fire — consult accept or conference join? (4) Salesforce Voice validation needed?'},
+  C11:{id:'C11',name:'Feature Toggle Reliability',short:'Config Manager: cluster unresponsiveness',status:'warn',detail:'Uptime constraint, not a feature gap. 6 root causes validated via chaos-test harness (ORC-52482). Most severe: GetFeatureToggles/IsFeatureToggleEnabled perform sync-over-async I/O with NO request timeout — slow Config Manager blocks scripting threads for up to 100s×retries, draining thread pool → cluster unresponsive. Root causes 3+4 fixed in PR #2636 (AAD-43679) but NEVER forward-merged to MAIN/DEVELOP/RELEASE. Production still runs buggy code. Customer symptom: contacts stop routing, agents show available but receive nothing.',jira:'ORC-52482 · AAD-43679 (breakfix, not merged)',pmq:'If this customer reports intermittent cluster unresponsiveness that traces to no code bug — was there a Config Manager degradation event? ORC-52482 root causes 1–5 are unresolved in production. PR #2636 (AAD-43679) fixed two root causes but was never shipped. Is that branch still viable for forward-merge?'}
+};
+
+
+// ═══════════════ ARCHETYPES ═══════════════
+const ARCHETYPES = [
+  {id:'all', label:'All', short:'Show everything', phases:['p1','p2','p3','p4','p5','p6','p7','p8','p9'],
+   gaps:null, caps:null,
+   summary:'All scenarios and gaps across every phase.',
+   coverage:'Full library'},
+
+  {id:'S1', label:'S1 Basic Inbound', short:'Inbound → IVR → Agent',
+   phases:['p1','p2','p3','p9'],
+   gaps:['g10'], caps:['C01','C08','C11'],
+   summary:'Patron calls → IVR custom script → Reqagent → agent answers → ACW. The atomic unit. Every other archetype is a deviation from this.',
+   coverage:'Mostly supported — scale limits (C01, C08) and infra reliability (C11) are the exposure.'},
+
+  {id:'S2', label:'S2 Overflow / Bullseye', short:'Queue overflow → proficiency broaden',
+   phases:['p2','p3'],
+   gaps:[], caps:['C01','C11'],
+   summary:'Queue depth exceeds threshold → Bullseye expands proficiency range → contacts route to agents not previously eligible. Multi-skill agent required.',
+   coverage:'⚠ No gap Jira for Bullseye + Queue Health interaction. Potential unknown-unknown if both active on overlapping skills.'},
+
+  {id:'S3', label:'S3 RRR Mid-Queue', short:'RRR fires → contact proficiency updated',
+   phases:['p2','p3'],
+   gaps:[], caps:['C11'],
+   summary:'RRR rule evaluates queue statistics at interval → contact proficiency updated mid-queue-wait → different agent pool becomes eligible.',
+   coverage:'⚠ Race condition between RRR update and AOR match is unresolved. No Jira. RRR reporting for proficiency updates not yet implemented.'},
+
+  {id:'S4', label:'S4 Queue Health', short:'Primary skill capacity reserved',
+   phases:['p2','p3'],
+   gaps:[], caps:['C11'],
+   summary:'Queue Health detects Primary skill KPIs degrading → deactivates Secondary skills on N protected agents → those agents handle only Primary skill contacts.',
+   coverage:'⚠ Not yet in gap tracker. Primary skill assignment ownership unresolved (ACD vs Routing Center, Feb 2026). New archetype — zero Jira coverage.'},
+
+  {id:'S5', label:'S5 Mid-Call', short:'Hold · Consult · Conference · Transfer',
+   phases:['p4','p5','p6','p7'],
+   gaps:['g1','g2','g4','g7','g9','g11'],
+   caps:['C02','C03','C05','C07','C10'],
+   summary:'Agent accepts contact → takes mid-call action. Sub-variants: hold, consult (no script context), conference (party limit, MCH), blind/warm transfer (metadata loss).',
+   coverage:'Highest gap density. ORC-53014, ORC-43660, CAP-02, CAP-05, CAP-07, CAP-10 all originate here.'},
+
+  {id:'S6', label:'S6 Personal Queue', short:'Agent handles concurrent contacts',
+   phases:['p5','p6'],
+   gaps:['g9','g11'],
+   caps:['C03','C07'],
+   summary:'Agent already handling a contact → second contact offered via Personal Queue (media type 51). Max 3 concurrent contacts per agent.',
+   coverage:'CAP-03 tracked. MCH edge case (conference + multi-call composition) has no Phase 2 Jira yet.'},
+
+  {id:'S7', label:'S7 Callback', short:'Patron opts out → system calls back',
+   phases:['p2','p3'],
+   gaps:[], caps:['C11'],
+   summary:'Patron requests callback → leaves queue → callback contact re-enters routing as outbound-flavored inbound when agent becomes available.',
+   coverage:'⚠ No gap Jiras for callback-specific scenarios. Does callback re-evaluate against RRR/Bullseye/Queue Health? Unknown.'},
+
+  {id:'S8', label:'S8 Outbound', short:'Enterprise-initiated contact',
+   phases:['p1','p3'],
+   gaps:[], caps:['C07'],
+   summary:'Enterprise initiates contact → script runs → agent previews contact record → system dials → OnPreview event fires. Routing strategies (Bullseye/RRR/QH) do not apply.',
+   coverage:'No gap Jiras specific to outbound in current tracker. Assumed low gap exposure.'},
+
+  {id:'S9', label:'S9 Extension Boundary', short:'Custom script hits missing extension point',
+   phases:['p4','p5','p8'],
+   gaps:['g3','g4','g13'],
+   caps:['C06','C10'],
+   summary:'Enterprise custom script attempts capability in a context where the system script has no extension point. The gap is always a missing extension point, not a missing action. ORC-53014 is the canonical example.',
+   coverage:'ORC-53014 tracked (consult leg). Post-call survey extension point not yet assessed. Other execution contexts (warm transfer handoff, ACW) may have the same gap.'},
+
+  {id:'S10', label:'S10 Infra Degraded', short:'Config Manager slowness → cluster down',
+   phases:['p1','p2','p3','p4','p5','p6','p7','p8','p9'],
+   gaps:[], caps:['C11'],
+   summary:'Any archetype S1–S9 executing during Config Manager degradation. Feature toggle checks block scripting threads → cluster unresponsive. 5 of 6 root causes open in production.',
+   coverage:'CAP-11 tracked (ORC-52482). Breakfix PR #2636 (AAD-43679) exists but was never merged to MAIN.'},
+
+  {id:'S11', label:'S11 Post-Call', short:'ACW · Survey · Disposition',
+   phases:['p8','p9'],
+   gaps:['g3','g5','g6'],
+   caps:['C04','C06'],
+   summary:'Contact ends → agent enters ACW → optional post-call survey → disposition → agent released. Two sub-phases: ACW (timer-controlled, no extension today) and post-call survey (extension point existence unconfirmed).',
+   coverage:'ACW timer gap tracked (CAP-04, ORC-51895). Post-call survey extension point not in tracker — potential S9-class gap.'}
+];
+
+const PHASE_CAPS = {
+  p1:['C01','C09'],
+  p2:['C01','C08','C09','C11'],
+  p3:['C11'],
+  p4:['C02','C06','C07','C10'],
+  p5:['C02','C03','C04','C06','C07','C10'],
+  p6:['C03','C07'],
+  p7:['C05','C07'],
+  p8:['C04','C06'],
+  p9:['C04']
+};
+
+// ═══════════════ LAYER 1 — PHASES ═══════════════
+const PHASES = [
+  {id:'p1',name:'Patron dials',sub:'SIP INVITE',col:'sup',
+   products:['PSTN / Carrier','VCSvc ACDProvider','ProviderESN or MRM'],
+   events:['CallContactEvent Status:Incoming · CallType:Regular · DNIS · ANI'],
+   states:['Contact → Incoming'],
+   apis:['SIP INVITE → ACDProvider.IncomingContact'],
+   scripts:[],
+   pmqs:['Is the DNIS validated against this tenant\'s configured POC? Misconfigured DNIS silently routes to wrong skill.','Does this customer spawn scripts on inbound? → check MaxSpawnScriptLimit (C01) and whether they use the API/UI spawn path (C08).'],
+   mm:`# Patron dials in\n## Products\n- PSTN / Carrier — SIP INVITE\n- VCSvc ACDProvider — ContactID + BusNo assigned\n- ProviderESN or MRM — audio path (cluster setting)\n## Events\n- \`CallContactEvent\` Status:**Incoming** · CallType:Regular · DNIS · ANI captured\n## State → Incoming\n## Layer 2\n- MaxSpawnScriptLimit: 15k/BU default (C01)\n- IVR LOG Kinesis: missing fields (C09) — affects any MENU actions`},
+  {id:'p2',name:'IVR + Queue',sub:'Script · Hold music · DTMF',col:'sup',
+   products:['VCSvc IVR Script Engine','Studio','TTS / Media Server','MOH'],
+   events:['CallContactEvent Status:Active — script executing','UpdateSkills — skill broadcast'],
+   states:['Contact → Active (script)','Contact → Active (persistent store, queued)'],
+   apis:['PLAY · MENU · REQAGENT → IncomingContactStrategy → gRPC EM'],
+   scripts:['Customer IVR script (Code/IvrScripts/)'],
+   pmqs:['Does this customer script use SPAWN? Peak call volume × scripts/call > 15k → will hit MaxSpawnScriptLimit. Silent if using UI/API spawn path.','Does this customer want IVR press path data in their analytics? → ORC-34959 gap. ACTION_LABEL and InteractionID GUID missing from IVR LOG Kinesis stream.','Does this customer want dynamic hold music / queue position announcements? → Enhancement SCN-010, not supported today.'],
+   mm:`# IVR executes + patron waits in queue\n## Products\n- VCSvc IVR Script Engine — XML→IL compiled\n- Studio — authoring (Code/IvrScripts/ READ ONLY)\n- TTS / Media Server · MOH (Music on Hold)\n## Events\n- \`CallContactEvent\` Status:**Active** — script executing\n- \`UpdateSkills\` — skill assignment broadcast\n## API / Script\n- \`PLAY\` · \`MENU\` (DTMF captured → IVR LOG event written to Kinesis)\n- \`REQAGENT\` → IncomingContactStrategy → gRPC SelfService.SendAsync()\n## Layer 2\n- MaxSpawnScriptLimit: 15k/BU default, NOT enforced via UI/API spawn (C01/C08)\n- IVR LOG Kinesis: missing ACTION_LABEL + InteractionID → data lake joins broken (C09)\n- ORC-34959: Phase 1 adds missing fields. ORC-53330 spike (1-day) confirms volume capacity.\n- Config Manager reliability: 5 open root causes → cluster unresponsive under CM slowness (C11)`},
+  {id:'p3',name:'Agent accepts',sub:'UIQ push · Audio bridge',col:'sup',
+   products:['ACDProvider FindMatch','VCSvc AgentProvider','UIQ','ProviderESN/MRM','Agent Workspace'],
+   events:['CallContactEvent Status:Incoming · CallType:AgentLeg','AgentState InboundContact','AgentLeg Dialing → Active','CallContactEvent Status:Active'],
+   states:['Agent → InboundContact (3)','Contact → Active (4)'],
+   apis:['ContactDeliveryCompletedStrategy','AcceptContactStrategy.HandleAsync()'],
+   scripts:['ONASSIGNMENT (System/AgentUI/)'],
+   pmqs:['Is the agent on a multi-call skill? If yes, existing active call placed on hold before new delivery (ORC-43660). Check CanMultiPartyConference + EnabledForMCH in AgentSessionStart.'],
+   mm:`# Agent selected + accepts call\n## Products\n- VCSvc ACDProvider FindMatch → AgentProvider → AcceptContactStrategy\n- UIQ — Kafka/MSK push (replaces GetNextEvent)\n- ProviderESN / MRM — RTP audio bridge activated\n## Events\n- \`CallContactEvent\` Status:**Incoming** CallType:**AgentLeg**\n- \`AgentState\` CurrentState:**InboundContact**\n- \`AgentLeg\` Status:**Dialing** → **Active**\n- \`CallContactEvent\` Status:**Active**\n## State: Contact → Active (4) · Agent → InboundContact (3)\n## Script: ONASSIGNMENT fires (System/AgentUI/)\n## ACWTimeoutSeconds + UseACW read from skill config here`},
+  {id:'p4',name:'Active call',sub:'Talk · Indicate · Data dips',col:'sup',
+   products:['ACDProvider / ESN or MRM','Agent Workspace','VCSvc Script Engine'],
+   events:['CallContactEvent Status:Active — sustained','PopURL · Indicator · PostData · AgentWorkflowConfiguration'],
+   states:['Contact → Active (4) sustained'],
+   apis:['SNIPPET / REST data dip','PopURL · Indicate actions'],
+   scripts:['Customer in-call Studio actions'],
+   pmqs:['Does this customer use Indicate actions for surveys or AI triggers? → Indicate on consult/conference leg is blocked (ORC-53014 / ORC-51894). Fix target 27.1.','Does this customer use Agent Assist or Copilot? → Non-functional on consult/conference legs — known bug ORC-34797.','Once ORC-53014 lands (consult script), it unlocks: Indicate, surveys, transcription, AutoSummary, Agent Assist simultaneously for ALL consult legs.'],
+   mm:`# Active call — talking, data dips, screen pops\n## Events\n- \`CallContactEvent\` Status:**Active** — sustained\n- \`PopURL\` — URL screen pop to agent\n- \`Indicator\` ActionType:ShowCustomForm/OpenURL/SpawnScript\n- \`PostData\` — custom data push\n- \`AgentWorkflowConfiguration\` — Agent Integration workflow\n## In-call Studio\n- \`SNIPPET\` / REST data dip · \`Indicate\` action\n## Layer 2\n- Consult leg: NO script context today (C10 — ORC-53014)\n- Agent Assist/Copilot: non-functional on consult/conference (ORC-34797)\n- Indicate: cannot fire during consult/conference leg (ORC-51894)`},
+  {id:'p5',name:'Conf / MCH',sub:'3-way · Multi-call · NOT same',col:'enh',
+   products:['VCSvc AgentProvider','ACDProvider MCH','ConferenceStatusChangedStrategy','UIQ','Agent Workspace'],
+   events:['CallContactEvent Holding → Consult Active → Joined','AgentState OutboundConsult / InboundConsult','MchAgentSettingsChangeEvent — VoiceThreshold'],
+   states:['Contact → Hold (8)','Consult → Active (4) CallType:Consult','All → Conference (14)','Multi-call: separate contacts, media type 51'],
+   apis:['APIConferenceCall → ConferenceStatusChangedStrategy (ConferenceId)','DialAgent/DialSkill + IsConsult=true','ORC-43660: REQAGENT + MultiCallSkill + target agent (media type 51)'],
+   scripts:['HoldConference.xml · ResumeConference.xml · TransferConference.xml'],
+   pmqs:['CRITICAL: Conference ≠ Multi-call. Conference = all parties in Joined state. Multi-call (ORC-43660) = agent handles SEPARATE concurrent contacts, toggling with hold/resume.','Carnival question "can I conference in a multi-call leg?" — DOCUMENTED EDGE CASE in ORC-43660 grooming: conference SPLITS when new PQ call arrives. Not resolved in Phase 1. No Jira for Phase 2 fix.','MCH capacity: CanMultiPartyConference + EnabledForMCH BOTH required in AgentSessionStart. VoiceThreshold in MchAgentSettingsChangeEvent controls per-agent capacity.','Multi-call hard cap: 3 concurrent per agent (GlobalCluster setting). Cannot hold ACD call to answer DID call (blocked by design in ORC-43660).'],
+   mm:`# Conference vs Multi-Call — CRITICAL DISTINCTION\n\n## Conference (Supported — SCN-006)\n- All parties in one call (Joined state)\n- \`APIConferenceCall\` → ConferenceStatusChangedStrategy (ConferenceId)\n- \`CallContactEvent\` Status:**Joined** · \`MchAgentSettingsChangeEvent\`\n- Requires: CanMultiPartyConference=true + EnabledForMCH=true\n- Max 8 parties\n\n## Multi-Call (In Progress — ORC-43660)\n- Agent handles SEPARATE concurrent contacts, toggling hold/resume\n- Media type 51 · Max 3 concurrent (hard cap)\n- REQAGENT with explicit target agent + MultiCallSkill flag\n- New event field: IsMultiCallSkill:boolean\n- Blind transfer to MultiCall skill: BLOCKED\n\n## EDGE CASE: Conference within a Multi-Call leg\n- Documented ORC-43660 grooming: "agent on conference, new PQ call arrives"\n- System SPLITS conference: one party → PQ, patron stays live\n- Out of scope for Phase 1 · No Phase 2 Jira yet\n\n## Layer 2\n- Consult leg has no script context (C10) — Indicate, surveys, transcription blocked\n- ORC-53055: hold music missing when patron is last conference party → In Progress 26.3.1\n- ORC-51786: participant visibility P1 ✅ 26.1.7 · P2 XL-XXL 27.3`},
+  {id:'p6',name:'Patron drops',sub:'GM: survive + callback',col:'gap',
+   products:['PSTN','VCSvc AgentProvider','ACDProvider MCH','UIQ','Agent Workspace'],
+   events:['CallContactEvent Disconnected (patron)','Conference collapses (current)','AgentState Unavailable IsAcw:true (both agents)'],
+   states:['Patron → Disconnected','Conference collapses → both Disconnected','Agent A + B → ACW'],
+   apis:['RemoteCallDisconnectedStrategy','ONUNASSIGNMENT'],
+   scripts:['ONUNASSIGNMENT (System/AgentUI/)'],
+   pmqs:['GM ask: conference survives patron drop + agent dials back + bridges patron in. NONE of these three are supported today.','MCH teardown is hardcoded to patron presence — requires new patron-optional MCH mode. No Jira exists yet.','Callback while in ACW: blocked by VC contact-state constraint (one active voice contact). Conference survival alone does not fix this.','AHT protection: if conference stays Active after patron drop, AHT clock keeps running — agents cannot game AHT by dropping patron. This is the protection mechanism.','GM operates in Salesforce Voice — any new callback/bridge events need separate SDK contract update (AW-57850).'],
+   mm:`# Patron drops — current vs GM ask\n## Current VC behaviour\n- Patron SIP BYE → RemoteCallDisconnectedStrategy fires\n- MCH conference teardown → all legs Disconnected\n- Agent A + Agent B → ACW (if skill configured)\n- Neither can call back while in ACW (one-voice-contact constraint)\n\n## GM requirement (none supported today)\n- Conference survives patron drop\n- Agent dials patron back (click-to-call or keypad)\n- Agent bridges patron back into surviving conference\n\n## 5 blocking gaps\n1. MCH teardown hardcoded to patron presence — no patron-optional conf mode\n2. Callback while in ACW blocked — VC contact-state constraint\n3. No patron-drop vs hang-up signal from carrier (same SIP BYE)\n4. No Studio action to bridge new outbound into surviving conference\n5. Salesforce Voice: GM operates here — SDK needs separate update`},
+  {id:'p7',name:'Transfer',sub:'Blind · Warm · Data loss',col:'gap',
+   products:['VCSvc AgentProvider','ACDProvider','UIQ','Agent Workspace'],
+   events:['CallContactEvent Incoming CallType:ReskillProxy (blind)','Holding + Consult Active (warm)','AgentLeg Disconnected Agent A'],
+   states:['Contact re-queued or Consult Active','Agent A → ACW','Agent B → InboundContact'],
+   apis:['TransferCallStrategy IsConsult flag','ApiCallTransferInfo: ConsultCount · ValidContactsCounter'],
+   scripts:['ONUNASSIGNMENT (Agent A)','ONASSIGNMENT (Agent B)'],
+   pmqs:['Does this customer report CallerID mismatches on transferred calls? → ANI stripped on warm/consult transfer (AW-57850 UC-T1).','Does Agent B get ACW and disposition after a warm transfer? → NO today. Agent B immediately gets next contact. NYS Tax ORC-38097.','Does this customer use Agent Assist or Copilot? → Non-functional for Agent B after any transfer type.','Does this customer do cross-BU transfers? → No linked reporting across BU boundary (ORC-52330, Walmart).'],
+   mm:`# Transfer — blind and warm\n## Blind (IsConsult=false)\n- \`TransferCallStrategy\` IsConsult=false\n- \`CallContactEvent\` Status:**Incoming** CallType:**ReskillProxy**\n- Agent A → \`AgentLeg\` Disconnected → ACW\n## Warm (IsConsult=true)\n- Patron → **Holding** · Consult → **Active** CallType:Consult\n- \`AgentState\` Agent A → **OutboundConsult (6)**\n- \`AgentState\` Agent B → **InboundConsult (5)**\n## Layer 2\n- C05: ANI stripped on warm/consult — CallerID mismatch · biometrics fail\n- Agent B: no ACW/disposition after warm transfer (NYS Tax ORC-38097)\n- Agent Assist/Copilot: non-functional for Agent B\n- ORC-52330: Cross-BU no linked reporting (Walmart)`},
+  {id:'p8',name:'Call ends + Survey',sub:'Hangup · Survey workaround',col:'enh',
+   products:['ProviderESN/MRM','VCSvc AgentProvider','Feedback Manager','UIQ'],
+   events:['CallContactEvent Disconnected FinalState:true','AgentState Unavailable IsAcw:true','Survey child contact: Incoming → Active → Disconnected'],
+   states:['Contact → Disconnected','Agent → Unavailable IsAcw:true'],
+   apis:['RemoteCallDisconnectedStrategy','VC_ContactEndSync/Async'],
+   scripts:['ONUNASSIGNMENT','Survey IVR script (child ContactID)'],
+   pmqs:['Does this customer use post-call surveys? Current method: Indicate button (agents can bypass). No reliable delivery reporting.','Does this customer use conferences or consults? Survey cannot trigger on those legs (blocked by ORC-53014 — consult has no script context).','ORC-48255 + ORC-53014 together = AI Feedback Management hero project unlock for ALL survey customers.'],
+   mm:`# Call ends + post-call survey\n## Normal end events\n- \`CallContactEvent\` Status:**Disconnected** FinalState:true\n- \`AgentLeg\` Status:**Disconnected** FinalState:true\n- VC_ContactEndSync → RT_* tables · VC_ContactEndAsync → Log_* tables\n- \`ONUNASSIGNMENT\` (System/AgentUI/)\n## Survey (workaround today)\n- Requires Indicate button in Agent Workspace\n- Agent can bypass → inconsistent delivery rate\n- Cannot trigger on consult/conference legs\n## Layer 2\n- ORC-48255 (27.1): change default hangup — keep patron alive for post-contact Studio\n- ORC-53014 (27.1): consult script context — enables survey on consult/conference legs\n- Together: unlock AI Feedback Management hero project`},
+  {id:'p9',name:'ACW',sub:'Disposition · Extend · Conf ACW',col:'enh',
+   products:['Agent Workspace','VCSvc ACDProvider','UIQ','WFM','SuiteData'],
+   events:['AgentState Unavailable IsAcw:true AcwTimeout:N','UpdateUnavailableCodes','AgentState Available'],
+   states:['Agent → Unavailable (2) IsAcw:true · routable=false','Agent → Available (1) · routable=true'],
+   apis:['ChangeAgentStateStrategy: routable flag','AgentContactMessage (SuiteData)'],
+   scripts:['Disposition Call.xml (System/AgentUI/)'],
+   pmqs:['Does this customer want agents to request more ACW time? Not supported today. SA needs up to 120 min (ORC-51895 target 27.3). Design question: requires supervisor approval gate?','Does Agent B get ACW after a conference? NO today — only contact owner (Agent A) gets ACW. Agent B immediately Available (ORC-53277 target 27.1).','ACW extension abuse risk: agents requesting many extensions would break WFM adherence. Need supervisor visibility into extension requests — design this in before shipping ORC-51895.'],
+   mm:`# ACW — After Call Work\n## Supported today\n- \`AgentState\` Unavailable IsAcw:true · AcwTimeout:N\n- \`UpdateUnavailableCodes\` — disposition codes\n- ChangeAgentStateStrategy → routable=false\n- AgentContactMessage (SuiteData) written on completion\n## Layer 2\n- C04: ACW timer — no extension mechanism (ORC-51895)\n## Gaps\n- ORC-51895: On-demand ACW extension → 27.3 · SA showstopper (120 min)\n- ORC-53277: Conference attendees get no ACW → 27.1 · SM-MED\n- ORC-53283: ACW when patron drops first → 27.3`}
+];
+
+// ═══════════════ LAYER 3 — GAPS ═══════════════
+const GAPS = [
+  {id:'g1',jira:'ORC-53055',title:'Hold music missing when patron is last conference party',phases:['p5'],sev:'gap',status:'In Progress',delivery:'26.3.1',customers:'GM, SA',rootCause:'CallLeg.CheckIfSkipOnHold incorrectly true when patron is sole remaining party.',fix:'Script System/Callers/Hold + CallLeg.cs · Vahid Shaikh · 26.3.1'},
+  {id:'g2',jira:'AW-57850',title:'Transfer data loss + conference architecture gaps',phases:['p5','p6','p7','p8','p9'],sev:'gap',status:'Open — Planning',delivery:'27.1–27.3',customers:'GM, ISOS, SA, Ford, NYS Tax',rootCause:'New ContactID on transfer strips all metadata. Conference collapses on patron drop.',fix:'Melena Fenn initiative. 13 transfer + 11 conference use cases.'},
+  {id:'g3',jira:'ORC-48255',title:'Default hangup tears down patron — no survey path',phases:['p8'],sev:'gap',status:'Sized XL-XXL',delivery:'27.1',customers:'Ford (committed), SA',rootCause:'Agent hangup immediately disconnects patron. No post-hangup Studio window.',fix:'New hangup: keep patron alive. 3-team: VC + Agent + FI.'},
+  {id:'g4',jira:'ORC-51894',title:'No Indicate action on consult leg',phases:['p4','p5','p8'],sev:'gap',status:'Sized XL-XXL',delivery:'27.1',customers:'SA, Ford',rootCause:'No Studio script assignable to consult leg. Indicate cannot fire.',fix:'Surface system script on consult leg. Pairs with ORC-53014.'},
+  {id:'g5',jira:'ORC-51895',title:'No on-demand ACW extension',phases:['p9'],sev:'enh',status:'Sized XL-XXL',delivery:'27.3',customers:'SA (showstopper)',rootCause:'ACWTimer expiry forces Available. No request-more-time mechanism.',fix:'New button. ACWTimer reset hook. Small Agent effort.'},
+  {id:'g6',jira:'ORC-53277',title:'Conference attendees get no ACW',phases:['p9'],sev:'gap',status:'Sized SM-MED',delivery:'27.1',customers:'SA, NYS Tax, GM',rootCause:'Only contact owner (Agent A) gets ACW. Agent B immediately Available.',fix:'Extend ACW to all conference participants.'},
+  {id:'g7',jira:'ORC-51786 / ORC-53113',title:'Conference participant visibility — agents join blind',phases:['p5'],sev:'gap',status:'P1 done · P2 Sizing',delivery:'P1 ✅ 26.1.7 · P2: 27.3',customers:'SA, all conf customers',rootCause:'Agents who join conference have no visibility into other participants.',fix:'Phase 2: live roster XL-XXL. VC must own.'},
+  {id:'g8',jira:'ORC-52330',title:'Cross-BU transfer — no linked reporting',phases:['p7'],sev:'enh',status:'Sized L',delivery:'27.1',customers:'Walmart',rootCause:'No linked view across BU boundary.',fix:'StableInteractionKey in both BU reports. Data Platform dependency.'},
+  {id:'g9',jira:'No Jira yet',title:'GM: conference survives patron drop + callback + bridge back',phases:['p6'],sev:'gap',status:'Pending Scoping',delivery:'TBD',customers:'GM (emergency)',rootCause:'MCH teardown tied to patron. No callback-in-ACW path. No bridge-back API. No patron-drop signal.',fix:'5 blockers: patron-optional MCH + media signal + bridge API + ACW bypass + SDK update.'},
+  {id:'g10',jira:'ORC-22932 / ORC-36819',title:'MaxSpawnScriptLimit not enforced via UI/API spawn paths',phases:['p1','p2'],sev:'gap',status:'New — Unresolved',delivery:'TBD (depends ORC-37696)',customers:'Blackhawk / any high-volume spawner',rootCause:'IC_SpawnScript and web admin spawn bypass the per-BU script limit silently.',fix:'gRPC gate from web/API before SQL spawn. Soft-enforce alerting first.'},
+  {id:'g11',jira:'ORC-43660 edge case',title:'Conference + multi-call: conference splits when new PQ call arrives',phases:['p5'],sev:'gap',status:'Known edge case — out of scope Phase 1',delivery:'TBD Phase 2',customers:'Carnival',rootCause:'Agent on conference receives new MCH call and parks conference. System splits conference: one party → PQ, patron stays live.',fix:'Not in ORC-43660 Phase 1. Phase 2 Jira needed.'},
+  {id:'g12',jira:'ORC-34959',title:'IVR press path data not available in Data Streams',phases:['p2'],sev:'enh',status:'New — Sizing',delivery:'26.4 (after ORC-53330 spike)',customers:'Sony Interactive Entertainment, DWH decommission',rootCause:'IVR LOG Kinesis stream missing ACTION_LABEL, InteractionID GUID. Data lake joins broken — stream uses bus_no+contactid, data lake uses regional GUIDs.',fix:'Phase 1: add missing fields to existing Kinesis stream. CU-worthy. Volume spike (1-day) needed first via ORC-53330.'},
+  {id:'g13',jira:'ORC-53014',title:'No custom script on consult leg — Indicate, surveys, transcription all blocked',phases:['p4','p5','p8'],sev:'gap',status:'New — Sizing',delivery:'27.1 (XL-XXL)',customers:'SA (showstopper), Ford, GM',rootCause:'No Studio script context on consult leg. BEGIN never fires. Blocks Indicate, surveys, transcription, AutoSummary, Agent Assist for ALL consult/conference legs.',fix:'Assign configurable custom script to consult leg. Trigger from BEGIN on consult accept. UI team must surface Indicate button. Pairs with ORC-48255 to enable AI FI hero project.'}
+];
+
+// ═══════════════ PM LENSES ═══════════════
+const PM_LENSES = {
+  p4:{
+    scenario:'Consult system script (ORC-53014) — what does it unlock and what is still open?',
+    lenses:[
+      {name:'What it unlocks',icon:'✦',cls:'li-ok',scls:'gc-r',status:'HIGH VALUE',
+       body:'ORC-53014 is a single capability that unblocks five customer pain points simultaneously: Indicate actions, post-contact surveys, real-time transcription, AutoSummary, and Agent Assist — all for consult and conference legs.',
+       findings:[{t:'o',v:'Paired with ORC-48255 (change default hangup): together they enable the AI Feedback Management hero project across ALL survey customers.'},{t:'o',v:'Solves ORC-51894 (Indicate on consult) as a direct consequence — no separate implementation needed.'},{t:'w',v:'Still requires: UI team to surface Indicate button on Agent B consult UI. No UI-side Jira exists yet.'}]},
+      {name:'Scope: voice vs digital',icon:'?',cls:'li-u',scls:'gc-a',status:'UNRESOLVED',
+       body:'Grooming note 2026-06-29: "What was our path for Digital if any?" — explicitly not answered. Digital consult (chat/SMS) may need entirely different handling.',
+       findings:[{t:'b',v:'Digital consult scope not defined. If included, estimate roughly doubles.'},{t:'w',v:'PM action: get explicit yes/no on digital scope before sizing. SA and Ford are voice-only today.'},{t:'b',v:'DFW Studio actions exist for digital — but consult script assignment model may differ entirely from voice.'}]},
+      {name:'Script trigger design',icon:'⬡',cls:'li-w',scls:'gc-a',status:'OPEN DESIGN',
+       body:'When does BEGIN fire? On consult accept, or on conference join? Grooming notes flag "confusion between OnAnswer and BEGIN." No OnConference() action exists today.',
+       findings:[{t:'b',v:'No OnConference() action exists — when Agent C joins a conference there is no hook. New action may be needed.'},{t:'w',v:'If BEGIN fires on consult accept and the consult later becomes a conference, does the script restart or continue?'},{t:'b',v:'PM action: define the exact trigger contract before engineering scopes. Wrong trigger = wrong event model = rework.'}]},
+      {name:'Configuration level',icon:'⊞',cls:'li-w',scls:'gc-a',status:'TBD',
+       body:'BU-wide single script is the simplest implementation. SA may need skill-level assignment. Per-agent is most flexible but most complex.',
+       findings:[{t:'o',v:'BU-wide is the right Phase 1 default — reduces UI scope, unblocks use cases immediately.'},{t:'w',v:'If SA needs per-skill assignment, scope it separately as a Phase 2 UI + database story.'},{t:'w',v:'Requires UI team: update models, add field to database, surface in UI for add/remove.'}]},
+      {name:'Data stream linkage',icon:'≡',cls:'li-w',scls:'gc-a',status:'LINKED',
+       body:'Once consult scripts run, they generate IVR LOG events — DTMF press path included. ORC-34959 must also land for the consult script audit trail to appear in the data lake.',
+       findings:[{t:'w',v:'ORC-53014 + ORC-34959 together = complete consult interaction audit trail in data lake.'},{t:'b',v:'ORC-34959 Phase 1 is voice IVR LOG only — digital consult press path needs separate streaming design.'},{t:'o',v:'ORC-53330 spike (1-day) confirms whether Kinesis volume capacity is sufficient before ORC-34959 ships.'}]}
+    ]
+  },
+  p5:{
+    scenario:'Conference vs Multi-Call — Carnival "can I conference in a multi-call leg?"',
+    lenses:[
+      {name:'Capability distinction',icon:'≠',cls:'li-b',scls:'gc-r',status:'CRITICAL',
+       body:'Conference (Joined state, all parties together) and Multi-call (ORC-43660, separate concurrent contacts with hold/resume, media type 51) are architecturally different. They share the MCH acronym but are not the same thing.',
+       findings:[{t:'b',v:'Multi-call max: 3 concurrent contacts. Conference max: 8 parties. Independent limits on different mechanisms.'},{t:'b',v:'Carnival ask is multi-call. GM ask is conference. Answering the wrong question wastes engineering cycles.'},{t:'o',v:'New field: IsMultiCallSkill:boolean on all CallContactEvents — PM can use this to distinguish in reporting.'}]},
+      {name:'Conference + multi-call composition',icon:'⊕',cls:'li-b',scls:'gc-r',status:'BLOCKED',
+       body:'The specific question "can I conference during a multi-call leg?" is answered in ORC-43660 grooming: when an agent on a conference receives a new PQ call and tries to park the conference, the system SPLITS the conference.',
+       findings:[{t:'b',v:'Documented ORC-43660: conference splits when new PQ call arrives — one party to Personal Queue, patron stays live. Conference integrity broken.'},{t:'b',v:'This is "out of scope for Phase 1" per grooming notes. It is a Phase 2 problem with no Jira yet.'},{t:'w',v:'PM action: create a Jira for "conference + multi-call composition" before Phase 2 scoping.'}]},
+      {name:'Agent behaviour risk',icon:'⚠',cls:'li-w',scls:'gc-a',status:'MEDIUM',
+       body:'Multi-call creates new reject-handling changes. On reject/timeout, agent is NOT placed in Unavailable-Refused (by design — they are already handling another call). But this means agents can reject PQ calls freely.',
+       findings:[{t:'w',v:'Agents can reject PQ calls without consequence to their availability state — by design, but creates no-penalty rejection.'},{t:'w',v:'Carnival risk: agent on difficult call rejects all incoming PQ calls. No supervisor event for this today.'},{t:'o',v:'Mitigant: OnSignal MultiCallRejected sent to customer script — Carnival can build retry/alert logic in Studio.'}]},
+      {name:'Platform surface: SF Voice',icon:'◈',cls:'li-w',scls:'gc-a',status:'PARTIAL',
+       body:'Multi-call introduces new fields (IsMultiCallSkill) that must be subscribed to via Agent SDK for Salesforce Voice. ORC-43660 requires support on "CMA integrated agent for SF, ZenDesk" — SDK validation not yet confirmed.',
+       findings:[{t:'b',v:'AW-57850: Agent SDK CTI events not designed for complex multi-party reconstruction.'},{t:'w',v:'ORC-43660 mentions desktop and integrated agent versions — confirm whether SF Voice SDK needs separate scoping.'}]},
+      {name:'Reporting impact',icon:'≡',cls:'li-w',scls:'gc-a',status:'UNKNOWN',
+       body:'Multi-call introduces media type 51, concurrent contact states, and new hold/resume patterns that existing reporting may not handle.',
+       findings:[{t:'b',v:'ORC-43660: new agent states (On second call, On hold ACD, On hold DID) must be exposed to reporting. Not yet done.'},{t:'w',v:'How does ACW work when multi-call contact ends while another contact is still active? Which state wins?'},{t:'b',v:'Conference split edge case: one party goes to PQ. Whose contact record shows the split?'}]}
+    ]
+  },
+  p6:{
+    scenario:'GM: Conference survives patron drop — agent dials back + bridges patron in',
+    lenses:[
+      {name:'State machine feasibility',icon:'⬡',cls:'li-b',scls:'gc-r',status:'BLOCKED',
+       body:'Conference (state 14) requires patron leg active in MCH state machine. When patron SIP BYE arrives, RemoteCallDisconnectedStrategy fires and MCH teardown cascades to all legs. No patron-optional conference exists.',
+       findings:[{t:'b',v:'MCH teardown hardcoded to patron presence — no Jira for this architectural gap yet.'},{t:'b',v:'No mechanism to merge a new outbound contact into a surviving conference leg.'},{t:'b',v:'If conference stayed alive with no ACW, Agent B stuck in InboundContact(3) indefinitely — no exit path.'}]},
+      {name:'Agent behaviour risk',icon:'⚠',cls:'li-w',scls:'gc-a',status:'HIGH RISK',
+       body:'AHT protection: if conference contact stays Active after patron drop, the AHT clock keeps running — agents cannot game AHT by dropping patron. This is the protection. But if ACW fires first (which it does today), AHT clock stops.',
+       findings:[{t:'o',v:'AHT protection: conference Active = AHT clock running. Correct design if conference survival is implemented.'},{t:'w',v:'No supervisor event when agent declines to call back after patron drop — audit trail gap.'},{t:'b',v:'No audit trail for "agent had callback option but did not use it."'}]},
+      {name:'Platform surface: Salesforce Voice',icon:'◈',cls:'li-b',scls:'gc-r',status:'BLOCKED',
+       body:'GM operates primarily in Salesforce Voice. Any new conference-survival or callback events need a separate Agent SDK contract update.',
+       findings:[{t:'b',v:'New events (patron-drop-detected, conference-surviving, callback-initiated, bridge-back) all need SDK contract addition.'},{t:'b',v:'AW-57850: Agent Assist, Copilot, screen pops non-functional on consult/conference legs in SF Voice today.'},{t:'b',v:'5 blocking gaps must all land simultaneously for GM SF Voice scenario to work.'}]},
+      {name:'Multi-leg complexity',icon:'⊞',cls:'li-b',scls:'gc-r',status:'BLOCKED',
+       body:'The GM scenario requires 3 sub-problems simultaneously: conference survival, callback (new outbound while conf active), and bridge-back. Each is independently complex.',
+       findings:[{t:'b',v:'Callback while in ACW: blocked by VC one-voice-contact constraint.'},{t:'b',v:'If conference survives, agent has conf contact + new outbound = requires ORC-43660 MCH to be live first.'},{t:'b',v:'Bridge-back: no Studio action or API exists to merge new outbound into existing conference leg.'}]},
+      {name:'Reporting / audit trail',icon:'≡',cls:'li-u',scls:'gc-a',status:'UNKNOWN',
+       body:'Reporting model must account for patron contact that disconnected and reconnected as new ContactID; conference that persisted; callback initiated by agent.',
+       findings:[{t:'b',v:'No StableInteractionKey linking original patron contact to callback contact (AW-57850 data lake gap).'},{t:'b',v:'ACW timing: if conference survives, which moment starts the ACW clock for QM/WFM?'},{t:'w',v:'Survey delivery: if patron drops mid-conference and is called back, which leg triggers the survey?'}]}
+    ]
+  }
+};
+
+// ═══════════════ STATE ═══════════════
+let mode='journey', sbTab='info', selPhase=null, selGap=null, selArchetype='all';
+
+
+// BUILD ARCHETYPE BAR
+function buildArchBar(){
+  const el=document.getElementById('arch-chips');
+  el.innerHTML=ARCHETYPES.map(a=>
+    '<div class="arch-chip'+(a.id==='all'?' all-chip':'')+(selArchetype===a.id?' active':'')+'" '
+    +'" data-aid="'+a.id+'" title="'+a.summary+'">'+a.label+'</div>'
+  ).join('');
+  el.onclick=function(e){const c=e.target.closest('[data-aid]');if(c)selectArchetype(c.dataset.aid);};
+}
+
+// SELECT ARCHETYPE
+function selectArchetype(id){
+  selArchetype=id;
+  selGap=null;
+  buildArchBar();
+  const arch=ARCHETYPES.find(a=>a.id===id);
+  // update meta
+  const meta=document.getElementById('arch-meta');
+  if(id==='all'){
+    meta.textContent='Select an archetype to filter gaps & highlight phases';
+  } else {
+    meta.textContent=arch.coverage;
+  }
+  // rebuild strip with dim/lit
+  buildStrip();
+  // refresh capability bar if a phase is selected
+  if(selPhase) buildCapBar(selPhase);
+  // render archetype summary in right panel
+  if(id==='all'){
+    renderMM('# CXone VC — Scenario Library\n## Select a phase or archetype\n- Journey: how the platform works today\n- Gap Map: open issues per phase\n- PM Lens: stress-test hidden gaps','Scenario Library','');
+  } else {
+    const gapList=arch.gaps&&arch.gaps.length
+      ? arch.gaps.map(gid=>{const g=GAPS.find(x=>x.id===gid);return g?'- '+g.jira+': '+g.title:'';}).filter(Boolean).join('\n')
+      : '- No tracked gaps for this archetype';
+    const capList=arch.caps&&arch.caps.length
+      ? arch.caps.map(cid=>{const c=CAPS[cid];return c?'- '+c.id+': '+c.short:'';}).filter(Boolean).join('\n')
+      : '- No specific capability limits';
+    const phasesStr=arch.phases.map(pid=>{const p=PHASES.find(x=>x.id===pid);return p?p.name:'';}).filter(Boolean).join(', ');
+    renderMM(
+      '# '+arch.label+'\n## What it is\n- '+arch.summary
+      +'\n## Phases touched\n- '+phasesStr
+      +'\n## Gap coverage\n'+gapList
+      +'\n## Capability limits\n'+capList
+      +'\n## Coverage assessment\n- '+arch.coverage,
+      arch.label, arch.gaps&&arch.gaps.length>0?'Gaps: '+arch.gaps.length:'No tracked gaps'
+    );
+  }
+  // if sidebar showing gaps, re-filter
+  if(selPhase) renderSidebar(selPhase);
+}
+
+// BUILD STRIP
+function buildStrip(){
+  const el=document.getElementById('phases'); el.innerHTML='';
+  PHASES.forEach((p,i)=>{
+    const gc=GAPS.filter(g=>g.phases.includes(p.id)).length;
+    const n=document.createElement('div');
+    const archActive=selArchetype&&selArchetype!=='all';const archObj=archActive?ARCHETYPES.find(a=>a.id===selArchetype):null;const inArch=archObj?archObj.phases.includes(p.id):true;n.className='pn ph-'+p.col+(selPhase===p.id?' active':'')+(archActive&&!inArch?' arch-dim':archActive&&inArch?' arch-lit':'');
+    n.dataset.id=p.id;
+    n.innerHTML='<div class="ph-nm">'+p.name+'</div><div class="ph-sb">'+p.sub+'</div>'
+      +((mode==='gaps'||mode==='pm')&&gc>0?'<div class="gbadge">'+gc+'</div>':'');
+    n.onclick=()=>selectPhase(p.id);
+    el.appendChild(n);
+    if(i<PHASES.length-1){
+      const s=document.createElement('div');s.className='psep';s.textContent='›';el.appendChild(s);
+    }
+  });
+}
+
+// CAPABILITY BAR
+function buildCapBar(phaseId){
+  const ci=document.getElementById('caps-inner');
+  const archObjC=selArchetype&&selArchetype!=='all'?ARCHETYPES.find(a=>a.id===selArchetype):null;const allCaps=PHASE_CAPS[phaseId]||[];const caps=archObjC&&archObjC.caps?allCaps.filter(c=>archObjC.caps.includes(c)):allCaps;
+  if(!caps.length){ci.innerHTML='<span class="no-caps">No specific platform limits for this phase</span>';return;}
+  ci.innerHTML=caps.map(cid=>{
+    const c=CAPS[cid];
+    const col=c.status==='ok'?'#4fd6be':c.status==='warn'?'#f9c74f':'#f38ba8';
+    const cls=c.status==='ok'?'cap-ok':c.status==='warn'?'cap-warn':'cap-block';
+    return '<div class="cap-chip '+cls+'" onclick="showCap(\''+cid+'\')" title="'+c.detail.substring(0,80)+'…"><div class="cap-dot" style="background:'+col+'"></div><span>'+c.short+'</span></div>';
+  }).join('');
+}
+
+function showCap(cid){
+  const c=CAPS[cid];
+  renderMM('# '+c.id+' — '+c.name+'\n## Limit\n- '+c.detail+'\n## Jira\n- '+c.jira+'\n## PM question to ask\n- '+c.pmq,c.name,c.status==='ok'?'OK':c.status==='warn'?'Warning':'Blocked');
+}
+
+// SELECT PHASE
+function selectPhase(phaseId){
+  selPhase=phaseId; selGap=null;
+  buildStrip(); buildCapBar(phaseId);
+  renderSidebar(phaseId);
+  if(mode==='pm'&&PM_LENSES[phaseId]) renderPM(phaseId);
+  else renderMM(PHASES.find(p=>p.id===phaseId).mm,PHASES.find(p=>p.id===phaseId).name,'');
+}
+
+// SIDEBAR
+function renderSidebar(phaseId){
+  const p=PHASES.find(x=>x.id===phaseId);
+  const archObj2=selArchetype&&selArchetype!=='all'?ARCHETYPES.find(a=>a.id===selArchetype):null;const gaps=GAPS.filter(g=>g.phases.includes(phaseId)&&(!archObj2||!archObj2.gaps||archObj2.gaps.includes(g.id)));
+  const sb=document.getElementById('sb-body');
+  const colMap={sup:'#4fd6be',enh:'#f9c74f',gap:'#f38ba8'};
+  const colLabel={sup:'Supported',enh:'Enhancement',gap:'Gap'};
+  if(sbTab==='info'){
+    let h='<div><div class="si-title">'+p.name+'</div><div class="si-sub">'+p.sub+'</div></div>'
+      +'<div><span class="tag" style="background:'+colMap[p.col]+'22;color:'+colMap[p.col]+';border-color:'+colMap[p.col]+'44">'+colLabel[p.col]+'</span></div>'
+      +'<div class="sh">Products</div><div>'+p.products.map(x=>'<span class="tag t-prod">'+x+'</span>').join('')+'</div>'
+      +'<div class="sh">Events</div>'+p.events.map(e=>'<div class="ir"><div class="ir-v"><span class="tag t-evt">'+e+'</span></div></div>').join('')
+      +'<div class="sh">States</div>'+p.states.map(s=>'<div class="ir"><div class="ir-v"><span class="tag t-state">'+s+'</span></div></div>').join('')
+      +'<div class="sh">APIs / Actions</div>'+p.apis.map(a=>'<div class="ir"><div class="ir-v"><span class="tag t-api">'+a+'</span></div></div>').join('');
+    if(p.scripts.length) h+='<div class="sh">IVR Scripts</div>'+p.scripts.map(s=>'<div class="ir"><div class="ir-v"><span class="tag t-api">'+s+'</span></div></div>').join('');
+    if(gaps.length) h+='<div class="sh">Open gaps ('+gaps.length+')</div>'+gaps.map(g=>'<span class="tag '+(g.sev==='gap'?'t-evt':'t-open')+'" style="cursor:pointer" onclick="selectGap(\''+g.id+'\')">'+g.jira.split(' ')[0]+'</span>').join('');
+    sb.innerHTML=h;
+  } else if(sbTab==='gaps-list'){
+    if(!gaps.length){sb.innerHTML='<div class="ph">No open gaps in this phase</div>';return;}
+    sb.innerHTML='<div><div class="si-title">'+p.name+'</div><div class="si-sub">'+gaps.length+' open item'+(gaps.length>1?'s':'')+'</div></div>'
+      +gaps.map(g=>'<div class="gcard '+(g.sev==='gap'?'gcard-red':'gcard-amb')+(selGap===g.id?' active':'')+'" onclick="selectGap(\''+g.id+'\')">'
+        +'<div class="gc-jira '+(g.sev==='gap'?'gc-r':'gc-a')+'">'+g.jira+'</div>'
+        +'<div class="gc-title">'+g.title+'</div>'
+        +'<div class="gc-meta"><span class="pill '+(g.sev==='gap'?'pl-r':'pl-a')+'">'+g.status+'</span>'
+        +'<span class="pill pl-b">'+g.delivery+'</span></div></div>').join('');
+  } else {
+    sb.innerHTML='<div><div class="si-title">'+p.name+'</div><div class="si-sub">PM questions to ask</div></div>'
+      +p.pmqs.map((q,i)=>'<div class="ir"><div class="ir-k">Q'+(i+1)+'</div><div class="ir-v">'+q+'</div></div>').join('');
+  }
+}
+
+// SELECT GAP
+function selectGap(gapId){
+  selGap=gapId;
+  sbTab='gaps-list';
+  document.querySelectorAll('.sb-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab==='gaps-list'));
+  renderSidebar(selPhase||GAPS.find(g=>g.id===gapId).phases[0]);
+  document.querySelectorAll('.gcard').forEach(c=>{
+    const j=c.querySelector('.gc-jira');
+    c.classList.toggle('active',j&&j.textContent.trim().startsWith(GAPS.find(g=>g.id===gapId)?.jira.split(' ')[0]));
+  });
+  const g=GAPS.find(x=>x.id===gapId);
+  renderMM('# '+g.jira+'\n## '+g.title+'\n## Status\n- '+g.status+' · '+g.delivery+'\n## Customers\n'+g.customers.split(',').map(c=>'- '+c.trim()).join('\n')+'\n## Root cause\n- '+g.rootCause+'\n## Fix approach\n- '+g.fix,g.jira,g.status);
+}
+
+// PM PANEL
+function renderPM(phaseId){
+  const data=PM_LENSES[phaseId];
+  if(!data){const p=PHASES.find(x=>x.id===phaseId);renderMM(p.mm,p.name+' — PM Lens','No analysis yet');return;}
+  document.getElementById('rptitle').textContent='PM Lens — '+data.scenario.substring(0,50)+'…';
+  const b=document.getElementById('rpbadge');b.textContent='5 lenses';b.className='rpbadge pl-p';b.style.display='';
+  const mw=document.getElementById('mmwrap');
+  const pd=document.createElement('div');pd.className='pmscroll';
+  pd.innerHTML='<div style="font-size:10px;color:var(--tm);margin-bottom:10px;font-weight:600">'+data.scenario+'</div>'
+    +data.lenses.map(l=>'<div class="lcard"><div class="lhdr"><div class="lion '+l.cls+'">'+l.icon+'</div><div class="ln">'+l.name+'</div><div class="ls '+l.scls+'">'+l.status+'</div></div>'
+      +'<div class="lbody">'+l.body+'</div>'
+      +l.findings.map(f=>'<div class="lf lf-'+f.t+'">'+f.v+'</div>').join('')+'</div>').join('');
+  mw.innerHTML='';mw.appendChild(pd);
+}
+
+// RENDER MARKMAP
+function renderMM(content,title,badge){
+  document.getElementById('rptitle').textContent=title;
+  const b=document.getElementById('rpbadge');
+  if(badge){
+    b.textContent=badge;b.style.display='';
+    const bl=badge.toLowerCase();
+    b.className='rpbadge '+(bl.includes('progress')||bl.includes('warn')||bl.includes('sizing')?'pl-a':bl.includes('done')||bl.includes('ok')||bl.includes('✅')?'pl-g':bl.includes('gap')||bl.includes('block')||bl.includes('blocked')?'pl-r':bl.includes('enh')?'pl-a':'pl-b');
+  } else b.style.display='none';
+  const mw=document.getElementById('mmwrap');
+  const d=document.createElement('div');d.className='markmap';d.id='mm-root';
+  const t=document.createElement('script');t.type='text/template';t.textContent=content;
+  d.appendChild(t);mw.innerHTML='';mw.appendChild(d);
+  if(window.markmap&&window.markmap.autoLoader)window.markmap.autoLoader.renderAll();
+}
+
+// MODE SWITCH
+document.getElementById('modes').addEventListener('click',function(e){
+  const btn=e.target.closest('.mode');if(!btn)return;
+  mode=btn.dataset.mode;
+  document.querySelectorAll('.mode').forEach(b=>b.classList.toggle('active',b===btn));
+  document.getElementById('strip-label').textContent={
+    journey:'Layer 1 — Patron journey · click any phase',
+    gaps:'Layer 3 — Gap map · badges = open issues per phase',
+    pm:'PM Lens — click a phase to stress-test for hidden gaps'
+  }[mode];
+  buildStrip();
+  if(selPhase){
+    renderSidebar(selPhase);
+    if(mode==='pm'&&PM_LENSES[selPhase]) renderPM(selPhase);
+    else renderMM(PHASES.find(p=>p.id===selPhase).mm,PHASES.find(p=>p.id===selPhase).name,'');
+  }
+});
+
+// SIDEBAR TABS
+document.getElementById('sb-tabs').addEventListener('click',function(e){
+  const btn=e.target.closest('.sb-tab');if(!btn)return;
+  sbTab=btn.dataset.tab;
+  document.querySelectorAll('.sb-tab').forEach(b=>b.classList.toggle('active',b===btn));
+  if(selPhase)renderSidebar(selPhase);
+});
+
+buildStrip();
+buildArchBar();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
+</body>
+</html>
