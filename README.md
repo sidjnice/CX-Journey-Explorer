@@ -29,7 +29,7 @@ Every scenario in this library sits across three layers:
 
 **Layer 2** — Platform capabilities. ** The constraints that exist independent of any scenario — script concurrency limits, conference party caps, ACW timer mechanics, Config Manager reliability, the missing extension point on consult legs. These are the chips in the capability bar. Some are configuration choices. Some are architectural facts. Some are production bugs with unmerged fixes.
 
-**Layer 3** — Customer asks and gaps. ** Where Layer 1 meets Layer 2 and something breaks — discovered when customers hit a limit or a missing feature. These are the gap cards in the Gap Map. Each one has a Jira, a severity, a delivery target, and a list of affected customers.
+**Layer 3** — Customer asks and gaps. ** Where Layer 1 meets Layer 2** and something breaks — discovered when customers hit a limit or a missing feature. These are the gap cards in the Gap Map. Each one has a Jira, a severity, a delivery target, and a list of affected customers.
 
 ---
 
